@@ -6,66 +6,44 @@ on:
       channels:
         description: Channels to publish to (comma separated, optional)
         required: false
+        default: default
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Free GitHub Actions Environment Disk Space
-      - name: Maximize Build Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          tool-cache: false
-          large-packages: false
+      - name: Check out repository
+        uses: actions/checkout@v6
 
-      - uses: actions/checkout@v6
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
-          java-version: 17
-          distribution: 'temurin'
+          java-version: 21
+          distribution: temurin
 
-      - name: Setup Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Read plugin version
+        run: echo "PLUGIN_VERSION=$(./gradlew properties --no-daemon --console=plain -q | awk '/^version:/ {print $2}')" >> "$GITHUB_ENV"
 
-      - name: Set the plugin version env var
-        run: echo "PLUGIN_VERSION=$(./gradlew properties --no-daemon --console=plain -q | grep "^version:" | awk '{printf $2}')" >> $GITHUB_ENV
-
-      - name: Set the change notes env var
-        run: echo "CHANGE_NOTES=$(sed -n "/<\!\-\-${{ env.PLUGIN_VERSION }}-->/,/<\!\-\-\/${{ env.PLUGIN_VERSION }}-->/p" changenotes.html | tr -d '\n')" >> $GITHUB_ENV
-
-      - name: Build & publish with Gradle
+      - name: Test and publish plugin
         env:
-          PLUGIN_DEPLOYMENT_CHANNELS: ${{ github.event.inputs.channel }}
+          PLUGIN_DEPLOYMENT_CHANNELS: ${{ inputs.channels }}
           JETBRAINS_REPO_TOKEN: ${{ secrets.JETBRAINS_REPO_TOKEN }}
           JETBRAINS_REPO_SIGNING_KEY: ${{ secrets.JETBRAINS_REPO_SIGNING_KEY }}
           JETBRAINS_REPO_SIGNING_KEY_PASSWORD: ${{ secrets.JETBRAINS_REPO_SIGNING_KEY_PASSWORD }}
           JETBRAINS_REPO_CERTIFICATE_CHAIN: ${{ secrets.JETBRAINS_REPO_CERTIFICATE_CHAIN }}
-        run: ./gradlew publishPlugin
+        run: ./gradlew test verifyPluginProjectConfiguration verifyPluginStructure publishPlugin
 
-      - name: Append commit hash
-        run: |
-          for file in ./build/distributions/*.zip ; do mv $file ${file%.*}-$(echo ${GITHUB_SHA} | cut -c1-8).zip ; done
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5.1.1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Copy plugin version to S3 bucket
-        run: |
-          aws s3 cp ./build/distributions ${{ secrets.S3_BUCKET_NAME }}/dist --recursive
-
-      - name: Create Release
+      - name: Create GitHub release
         uses: ncipollo/release-action@v1.20.0
         with:
-          artifacts: "./build/distributions/*.zip"
-          tag: "${{ env.PLUGIN_VERSION }}"
-          body: "${{ env.CHANGE_NOTES }}"
-          commit: ${{ env.GITHUB_SHA }}
+          artifacts: build/distributions/*.zip
+          bodyFile: changenotes.html
+          commit: ${{ github.sha }}
+          tag: ${{ env.PLUGIN_VERSION }}
           token: ${{ secrets.GITHUB_TOKEN }}

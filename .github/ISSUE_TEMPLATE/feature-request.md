@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature to add (excluding requests for new Pokémon)
+about: Suggest a new feature or animation improvement
 title: ''
 labels: enhancement
 assignees: ''
