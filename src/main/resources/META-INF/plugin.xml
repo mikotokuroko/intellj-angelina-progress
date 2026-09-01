@@ -1,7 +1,7 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/mikotokuroko/intellj-angelina-progress">
     <id>com.mikotokuroko.angelinaprogress</id>
     <name>Angelina Progress Bar</name>
-    <vendor>Angelina Progress Bar</vendor>
+    <vendor url="https://github.com/mikotokuroko">mikotokuroko</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 

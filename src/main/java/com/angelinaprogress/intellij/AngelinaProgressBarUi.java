@@ -168,9 +168,6 @@ public class AngelinaProgressBarUi extends BasicProgressBarUI {
         }
         setToolTipText();
 
-        final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-        final Graphics2D graphics2D = (Graphics2D) g;
-
         final Insets border = progressBar.getInsets(); // area for border
         final int width = progressBar.getWidth();
         int height = progressBar.getPreferredSize().height;
@@ -185,6 +182,9 @@ public class AngelinaProgressBarUi extends BasicProgressBarUI {
         if (barRectWidth <= 0 || barRectHeight <= 0) {
             return;
         }
+
+        final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
+        final Graphics2D graphics2D = (Graphics2D) g;
 
         final int amountFull;
         if (System.getenv().containsKey(DEBUGGING_ENV_VAR)) {
@@ -265,9 +265,7 @@ public class AngelinaProgressBarUi extends BasicProgressBarUI {
     }
 
     private void setToolTipText() {
-        if (addToolTips.get()) {
-            progressBar.setToolTipText(angelina.getName());
-        }
+        progressBar.setToolTipText(addToolTips.get() ? angelina.getName() : null);
     }
 
     private void drawBorder(final RoundRectangle2D rectangle, final Graphics2D graphics2D) {

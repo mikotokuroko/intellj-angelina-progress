@@ -16,7 +16,7 @@ Animated IntelliJ progress bars featuring **Angelina the Mellow Wish** (予愿�
 
 | Broom Ride | Delivery Run | Diving |
 |:---:|:---:|:---:|
-| <img src="./src/main/resources/com/angelinaprogress/intellij/characters/broom.svg" alt="Angelina broom ride animation" width="260"> | <img src="./src/main/resources/com/angelinaprogress/intellij/characters/run.svg" alt="Angelina delivery run animation" width="260"> | <img src="./src/main/resources/com/angelinaprogress/intellij/characters/dive.svg" alt="Angelina diving animation" width="260"> |
+| <img src="./docs/previews/broom.png" alt="Angelina broom ride animation" width="260"> | <img src="./docs/previews/run.png" alt="Angelina delivery run animation" width="260"> | <img src="./docs/previews/dive.png" alt="Angelina diving animation" width="260"> |
 
 ## Features
 

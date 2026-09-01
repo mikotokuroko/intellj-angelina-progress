@@ -13,7 +13,7 @@ import javax.swing.UIManager;
 import org.jetbrains.annotations.NotNull;
 
 public class AngelinaProgressListener implements LafManagerListener, DynamicPluginListener {
-    private static final String PLUGIN_ID_STRING = "com.mikotokuroko.angelinaprogress";
+    static final String PLUGIN_ID_STRING = "com.mikotokuroko.angelinaprogress";
     private static final String PROGRESS_BAR_UI_KEY = "ProgressBarUI";
     private static final String ANGELINA_PROGRESS_BAR_UI_IMPLEMENTATION_NAME = AngelinaProgressBarUi.class.getName();
     private volatile static Object previousProgressBar = null;
