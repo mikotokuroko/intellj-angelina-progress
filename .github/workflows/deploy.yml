@@ -25,7 +25,7 @@ jobs:
           distribution: temurin
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Read plugin version
         run: echo "PLUGIN_VERSION=$(./gradlew properties --no-daemon --console=plain -q | awk '/^version:/ {print $2}')" >> "$GITHUB_ENV"
