@@ -8,7 +8,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable displayName="Angelina Progress Bar"
             dynamic="true"
-            id="com.angelinaprogress.intellij.settings" instance="com.angelinaprogress.intellij.configuration.AngelinaProgressConfigurable"
+            id="com.mikotokuroko.angelinaprogress.settings" instance="com.angelinaprogress.intellij.configuration.AngelinaProgressConfigurable"
             parentId="appearance" />
         <applicationService
             serviceImplementation="com.angelinaprogress.intellij.configuration.AngelinaProgressState" />
