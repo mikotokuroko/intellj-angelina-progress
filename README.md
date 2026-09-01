@@ -2,7 +2,7 @@
 
 <img src="./src/main/resources/META-INF/pluginIcon.svg" alt="Angelina Progress Bar 图标" width="80">
 
-# Angelina Progress Bar
+# 予愿安洁莉娜进度条
 
 让 IntelliJ 的进度条显示 **予愿安洁莉娜（Angelina the Mellow Wish）** 动画。
 
