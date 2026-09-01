@@ -39,7 +39,7 @@
 ## 设置与测试
 
 打开 **设置 > 外观与行为 > Angelina Progress Bar**，选择动画并查看实时预览。若要在 IDE 的其他位置看到进度条，可触发项目索引、Gradle 同步、依赖下载或代码分析等后台任务。
-
+F
 ## 致谢
 
 进度条核心代码最初改编自 [kagof/intellij-pokemon-progress](https://github.com/kagof/intellij-pokemon-progress)。
