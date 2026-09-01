@@ -1,27 +1,25 @@
 <idea-plugin>
-    <id>com.kagof.pokeprogress</id>
-    <name>Pokemon Progress</name>
-    <vendor email="karl.goffin@gmail.com" url="https://github.com/kagof">Kagof</vendor>
+    <id>com.angelinaprogress.intellij</id>
+    <name>Angelina Progress Bar</name>
+    <vendor>Angelina Progress Bar</vendor>
 
-    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable displayName="Pokémon Progress"
+        <applicationConfigurable displayName="Angelina Progress Bar"
             dynamic="true"
-            id="org.intellij.sdk.settings.AppSettingsConfigurable" instance="com.kagof.intellij.plugins.pokeprogress.configuration.PokemonProgressConfigurable"
+            id="com.angelinaprogress.intellij.settings" instance="com.angelinaprogress.intellij.configuration.AngelinaProgressConfigurable"
             parentId="appearance" />
         <applicationService
-            serviceImplementation="com.kagof.intellij.plugins.pokeprogress.configuration.PokemonProgressState" />
+            serviceImplementation="com.angelinaprogress.intellij.configuration.AngelinaProgressState" />
         <postStartupActivity
-            implementation="com.kagof.intellij.plugins.pokeprogress.ProjectStartupActivity" />
-        <notificationGroup displayType="STICKY_BALLOON" id="Pokemon Progress Update" />
+            implementation="com.angelinaprogress.intellij.ProjectStartupActivity" />
+        <notificationGroup displayType="STICKY_BALLOON" id="Angelina Progress Bar Update" />
     </extensions>
     <applicationListeners>
-        <listener class="com.kagof.intellij.plugins.pokeprogress.PokemonProgressListener"
+        <listener class="com.angelinaprogress.intellij.AngelinaProgressListener"
             topic="com.intellij.ide.ui.LafManagerListener" />
-        <listener class="com.kagof.intellij.plugins.pokeprogress.PokemonProgressListener"
+        <listener class="com.angelinaprogress.intellij.AngelinaProgressListener"
             topic="com.intellij.ide.plugins.DynamicPluginListener" />
     </applicationListeners>
 </idea-plugin>

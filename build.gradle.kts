@@ -27,7 +27,6 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
     }
     testImplementation("junit:junit:4.13.2")
-    testImplementation("com.sksamuel.scrimage", "scrimage-core", "4.3.5")
     testImplementation(kotlin("test"))
 }
 
@@ -91,30 +90,6 @@ kotlin {
     jvmToolchain(17)
 }
 
-tasks {
-    register("indexColors", DefaultTask::class) {
-        group = "pokemon-progress"
-        description = "create index file for color schemes"
-        doFirst {
-            File("src/main/resources/com/kagof/intellij/plugins/pokeprogress/colors").let { dir ->
-                if (dir.exists() && dir.isDirectory && dir.canRead()) {
-                    val strb = StringBuilder()
-                    dir.listFiles()
-                        ?.filter { it.isFile }
-                        ?.filter { it.name.endsWith(".csv") }
-                        ?.forEach { strb.append(it.name).append("\n") }
-                    val index = File(dir, ".cscheme.index")
-                    index.delete()
-                    index.createNewFile()
-                    index.writeText(strb.toString())
-                } else throw IllegalStateException("unable to read color schemes")
-            }
-        }
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-        dependsOn("indexColors")
-    }
-
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
 }
