@@ -57,7 +57,16 @@ final class AnimatedSvgIcon implements Icon {
             final long frameDuration = readFrameDurationMillis(frameElements.get(0), frameElements.size());
             final List<Image> frames = new ArrayList<>(frameElements.size());
             for (final Element frameElement : frameElements) {
-                frames.add(renderFrame(builder, document, frameElement, character));
+                try {
+                    frames.add(renderFrame(builder, document, frameElement, character));
+                } catch (final IllegalStateException exception) {
+                    if (!isDocumentLimitExceeded(exception)) {
+                        throw exception;
+                    }
+                }
+            }
+            if (frames.isEmpty()) {
+                throw new IOException("Every SVG frame exceeds IntelliJ's document limits: " + resource);
             }
             return new AnimatedSvgIcon(List.copyOf(frames), frameDuration);
         } catch (final ParserConfigurationException | SAXException | TransformerException e) {
@@ -146,6 +155,12 @@ final class AnimatedSvgIcon implements Icon {
             final Node animation = animations.item(index);
             animation.getParentNode().removeChild(animation);
         }
+    }
+
+    private static boolean isDocumentLimitExceeded(final IllegalStateException exception) {
+        return exception.getMessage() != null
+                && exception.getMessage().startsWith(
+                        "Maximum count of rendered element instances exceeded");
     }
 
     private static long readFrameDurationMillis(final Element frame, final int frameCount) {
