@@ -151,7 +151,8 @@ final class AnimatedSvgIcon implements Icon {
         try {
             Files.write(temporarySvg, svg);
             final Image image = ImageLoader.loadFromUrl(temporarySvg.toUri().toURL());
-            final BufferedImage rendered = ImageUtil.toBufferedImage(image);
+            final BufferedImage rendered = ImageUtil.toBufferedImage(
+                ImageUtil.scaleImage(image, (int) Math.round(width), (int) Math.round(height)));
             removeGreenScreenPixels(rendered);
             return ImageUtil.ensureHiDPI(rendered, scaleContext, width, height);
         } finally {
