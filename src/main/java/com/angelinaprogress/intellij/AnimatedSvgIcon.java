@@ -1,19 +1,21 @@
 package com.angelinaprogress.intellij;
 
-import com.intellij.util.SVGLoader;
 import com.intellij.ui.scale.ScaleContext;
+import com.intellij.util.ImageLoader;
 import com.intellij.util.ui.ImageUtil;
 import com.intellij.util.ui.UIUtil;
 import com.angelinaprogress.intellij.model.Angelina;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.io.ByteArrayInputStream;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
@@ -145,8 +147,16 @@ final class AnimatedSvgIcon implements Icon {
             / character.getCropHeight();
         final double height = character.getHeight();
         final ScaleContext scaleContext = ScaleContext.create();
-        final Image image = SVGLoader.load(null, new ByteArrayInputStream(svg), scaleContext, width, height);
-        return ImageUtil.ensureHiDPI(image, scaleContext, width, height);
+        final Path temporarySvg = Files.createTempFile("angelina-progress-frame-", ".svg");
+        try {
+            Files.write(temporarySvg, svg);
+            final Image image = ImageLoader.loadFromUrl(temporarySvg.toUri().toURL());
+            final BufferedImage rendered = ImageUtil.toBufferedImage(image);
+            removeGreenScreenPixels(rendered);
+            return ImageUtil.ensureHiDPI(rendered, scaleContext, width, height);
+        } finally {
+            Files.deleteIfExists(temporarySvg);
+        }
     }
 
     private static void removeAnimationElements(final Element frame) {
@@ -154,6 +164,20 @@ final class AnimatedSvgIcon implements Icon {
         for (int index = animations.getLength() - 1; index >= 0; index--) {
             final Node animation = animations.item(index);
             animation.getParentNode().removeChild(animation);
+        }
+    }
+
+    private static void removeGreenScreenPixels(final BufferedImage image) {
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                final int argb = image.getRGB(x, y);
+                final int red = (argb >>> 16) & 0xff;
+                final int green = (argb >>> 8) & 0xff;
+                final int blue = argb & 0xff;
+                if (green > 180 && green > red * 2 && green > blue * 2) {
+                    image.setRGB(x, y, argb & 0x00ffffff);
+                }
+            }
         }
     }
 
